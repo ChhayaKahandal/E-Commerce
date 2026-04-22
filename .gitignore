@@ -1,0 +1,15 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Maven build folders (ALL microservices)
+**/target/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+
+# Spring Boot temp files
+*.class
