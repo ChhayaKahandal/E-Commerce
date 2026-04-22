@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService
     @Override
     public UserResponse createUser(UserRequest request)
     {
-          if(userRepo.existsByEmai(request.getEmail()))
+          if(userRepo.existsByEmail(request.getEmail()))
           {
               throw new RuntimeException("Emai aldready exists");
           }
@@ -26,29 +26,44 @@ public class UserServiceImpl implements UserService
           user.setName(request.getName());
           user.setEmail(request.getEmail());
           user.setPassword(request.getPassword());
-          User saveduser=userRepo.save(user);
+          User savedUser=userRepo.save(user);
           return mapToDto(savedUser);
     }
 
     @Override
     public UserResponse getById(Long id)
     {
-        return null;
+        User user=userRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()->new RuntimeException("User not found"));
+        return mapToDto(user);
+
     }
 
     @Override
     public UserResponse updateUser(Long id, UserRequest request) {
-        return null;
+        User user=userRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()-> new RuntimeException("User not found"));
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        User savedUser = userRepo.save(user);
+        return mapToDto(savedUser);
     }
 
     @Override
-    public List<UserResponse> getAllUser() {
-        return List.of();
+    public List<UserResponse> getAllUser()
+    {
+        List<User> users = userRepo.findByIsDeletedfalse();
+        return users.stream()
+                .map(product -> mapToDto(product))
+                .toList();
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id)
+    {
 
+       User user=userRepo.findByIdAndIsDeletedFalse(id).orElseThrow(()->new RuntimeException("User not found"));
+       user.setIsDeleted(true);
+       userRepo.save(user);
     }
 
     //Mapping method : Product to ProductResponseDto
