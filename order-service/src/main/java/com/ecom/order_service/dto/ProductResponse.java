@@ -1,5 +1,8 @@
 package com.ecom.order_service.dto;
 
+
+
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +10,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderResponse
+public class ProductResponse
 {
     private Long id;
-    private Long userId;
-    private Long productId;
-    private Integer quantity;
-    private Double totalprice;
+    private String name;
+    private Double price;
 }

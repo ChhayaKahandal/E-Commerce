@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService
     @Override
     public List<UserResponse> getAllUser()
     {
-        List<User> users = userRepo.findByIsDeletedfalse();
+        List<User> users = userRepo.findByIsDeletedFalse();
         return users.stream()
                 .map(product -> mapToDto(product))
                 .toList();
