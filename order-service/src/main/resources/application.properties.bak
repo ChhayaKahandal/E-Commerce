@@ -12,5 +12,8 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.show-sql=true
 
-#Eureka config
+# =========================
+# Eureka Client Configuration
+# =========================
 eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+

@@ -1,0 +1,18 @@
+# Application Name
+spring.application.name=config-server
+
+server.port=8888
+
+
+
+# Enable Config Server
+spring.cloud.config.server.git.uri=file:///C:/Users/user/Desktop/config-repo
+
+# Optional (recommended for debugging)
+spring.cloud.config.server.git.clone-on-start=true
+spring.cloud.config.server.git.default-label=main
+
+# =========================
+# Eureka Client Configuration
+# =========================
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
