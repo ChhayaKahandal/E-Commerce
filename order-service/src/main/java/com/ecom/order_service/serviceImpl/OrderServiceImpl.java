@@ -1,10 +1,9 @@
 package com.ecom.order_service.serviceImpl;
 
-import com.ecom.order_service.client.ProductClient;
-import com.ecom.order_service.client.UserClient;
 import com.ecom.order_service.dto.OrderRequest;
 import com.ecom.order_service.dto.OrderResponse;
 import com.ecom.order_service.dto.ProductResponse;
+import com.ecom.order_service.dto.UserResponse;
 import com.ecom.order_service.model.Order;
 import com.ecom.order_service.repository.OrderRepo;
 import com.ecom.order_service.service.OrderService;
@@ -17,39 +16,34 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    //injecting dependency
     private final OrderRepo orderRepo;
-    private final ProductClient productClient;
-    private final UserClient userClient;
-
-
+    private final CircuitBreakerImpl circuitBreaker;
 
     @Override
     public OrderResponse create(OrderRequest request) {
 
-        //validate user
-        userClient.getUser(request.getUserId());
+        // ✅ Circuit breaker handles external calls
+        UserResponse user = circuitBreaker.getUser(request.getUserId());
+        ProductResponse product = circuitBreaker.getProduct(request.getProductId());
 
-        // 1. Get product from Product Service
-        ProductResponse product = productClient.getProduct(request.getProductId());
+        // Safety check
+        if (product == null || product.getPrice() == null) {
+            throw new RuntimeException("Product data unavailable");
+        }
 
-
-
-        // 2. Calculate total price
+        // Calculate total price
         Double totalPrice = product.getPrice() * request.getQuantity();
 
-        // 3. Build Order entity
+        // Build Order entity
         Order order = new Order();
         order.setUserId(request.getUserId());
         order.setProductId(request.getProductId());
         order.setQuantity(request.getQuantity());
         order.setTotalPrice(totalPrice);
 
-
-        // 4. Save to DB
+        // Save order
         Order savedOrder = orderRepo.save(order);
 
-        // 5. Return response
         return mapToResponse(savedOrder);
     }
 

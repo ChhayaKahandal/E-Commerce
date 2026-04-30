@@ -3,11 +3,12 @@ package com.ecom.order_service.client;
 
 
 import com.ecom.order_service.dto.UserResponse;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-    @FeignClient(name="USER-SERVICE")
+   @FeignClient(name="USER-SERVICE")
     public interface UserClient
     {
         @GetMapping("/user/{id}")
