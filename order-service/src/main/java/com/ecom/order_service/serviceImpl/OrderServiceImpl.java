@@ -17,19 +17,16 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepo orderRepo;
-    private final CircuitBreakerImpl circuitBreaker;
+    private final ExternalService externalService;
 
     @Override
     public OrderResponse create(OrderRequest request) {
 
         // ✅ Circuit breaker handles external calls
-        UserResponse user = circuitBreaker.getUser(request.getUserId());
-        ProductResponse product = circuitBreaker.getProduct(request.getProductId());
+        UserResponse user = externalService.getUser(request.getUserId());
+        ProductResponse product =externalService.getProduct(request.getProductId());
 
-        // Safety check
-        if (product == null || product.getPrice() == null) {
-            throw new RuntimeException("Product data unavailable");
-        }
+
 
         // Calculate total price
         Double totalPrice = product.getPrice() * request.getQuantity();
